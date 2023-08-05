@@ -1,0 +1,17 @@
+.center-screen {
+    align-items: center;
+    margin-top: 20%;
+}
+.boxView{
+    height: 400px;
+    box-shadow: 0px 0px 11px 11px rgba(0, 0, 0, 0.2);
+    padding: 10px;
+}
+.videoScreen{
+    text-align: center;
+    vertical-align: middle;
+    height: 380px;
+}
+.controlPanel{
+    height: 380px;
+}

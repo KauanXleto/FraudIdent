@@ -1,0 +1,45 @@
+version: '3.4'
+
+networks:
+  fraudident:
+
+services:
+  fraudidentDB:
+    container_name: fraudidentDB
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    ports:
+        - 1433:1433
+    volumes:
+        - /var/opt/mssql
+        # we copy our scripts onto the container
+        - ./:/usr/src/app 
+    environment:
+        - ACCEPT_EULA=Y
+        - MSSQL_SA_PASSWORD=password@123#    
+    command: sh -c ' chmod +x ./sqlConfig.sh; ./sqlConfig.sh & /opt/mssql/bin/sqlservr;'
+    networks:
+        - fraudident
+
+  fraudident:
+    container_name: fraudident
+    image: ${DOCKER_REGISTRY-}webapi
+    build:
+      context: ./FraudIdent
+      dockerfile: Dockerfile.server
+    ports:
+        - 8004:80
+    depends_on:
+        - fraudidentDB
+    networks:
+        - fraudident
+
+  ui:
+    container_name: ui
+    image: ${DOCKER_REGISTRY-}fraudident
+    build: 
+      context: ./FraudIdent
+      dockerfile: Dockerfile.ui
+    ports:
+        - 8005:80
+    networks:
+        - fraudident
