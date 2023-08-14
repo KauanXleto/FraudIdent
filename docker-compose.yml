@@ -1,7 +1,7 @@
 version: '3.4'
 
-networks:
-  fraudident:
+#networks:
+#  fraudident:
 
 services:
   fraudidentDB:
@@ -17,29 +17,32 @@ services:
         - ACCEPT_EULA=Y
         - MSSQL_SA_PASSWORD=password@123#    
     command: sh -c ' chmod +x ./sqlConfig.sh; ./sqlConfig.sh & /opt/mssql/bin/sqlservr;'
-    networks:
-        - fraudident
+    #networks:
+    #    - fraudident
 
   fraudident:
     container_name: fraudident
     image: ${DOCKER_REGISTRY-}webapi
     build:
-      context: ./FraudIdent
-      dockerfile: Dockerfile.server
+      context: ./
+      dockerfile: Dockerfile
+    environment:
+        - ASPNETCORE_URLS=https://+:8004;http://+:80
+        - ASPNETCORE_HTTPS_PORT=8004
     ports:
         - 8004:80
     depends_on:
         - fraudidentDB
-    networks:
-        - fraudident
+    #networks:
+    #    - fraudident
 
   ui:
     container_name: ui
     image: ${DOCKER_REGISTRY-}fraudident
     build: 
-      context: ./FraudIdent
-      dockerfile: Dockerfile.ui
+      context: ./FraudIdent/angularApp
+      dockerfile: Dockerfile
     ports:
         - 8005:80
-    networks:
-        - fraudident
+    #networks:
+    #    - fraudident

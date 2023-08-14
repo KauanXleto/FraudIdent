@@ -13,7 +13,7 @@ export class AppApiService {
   controllerUrl: string = "";
 
   constructor(private http: HttpClient) {
-    this.controllerUrl = "http://localhost:8004/FraudIdentifier";
+    this.controllerUrl = "http://localhost:8004/FraudIdent";
   }
   
   public getTruckModels(){
