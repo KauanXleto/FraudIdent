@@ -1,108 +1,117 @@
-<div class="teste">
-    <div class="row">
-    <div class="col-sm-12">
-        <div class="form-check form-switch formImput">
-            <label class="form-check-label" for="flexSwitchCheckDefault">Inserir dados Manuais</label>
-            <input class="form-check-input" 
-                    type="checkbox" 
-                    role="switch" 
-                    id="flexSwitchCheckDefault" 
-                    [(ngModel)]="model.ManualDataInsert">
+<div class="controPanel">
+    <div class="centerPanel">
+        <div *ngIf="enableRegister">
+            <div class="row">
+            <div class="col-sm-12">
+                <div class="form-check form-switch formImput">
+                    <label class="form-check-label" for="flexSwitchCheckDefault">Inserir dados Manuais</label>
+                    <input class="form-check-input" 
+                            type="checkbox" 
+                            role="switch" 
+                            id="flexSwitchCheckDefault" 
+                            [(ngModel)]="model.ManualDataInsert">
+                </div>
+            </div>
+            </div>
         </div>
-    </div>
-    </div>
-    <div class="row">
-    <div class="col-sm-12">
-        <h5><b>Informações Caminhão</b></h5>
-    </div>
-    </div>
-    <div class="ManualInfoTruck" *ngIf="model.ManualDataInsert else comboInfo">
-    <div class="row">
+    
+        <div class="row">
         <div class="col-sm-12">
-            <input type="text" 
-                    class="form-control formImput" 
-                    placeholder="Nome Modelo" 
-                    aria-label="Nome Modelo" 
-                    aria-describedby="basic-addon1"
-                    [(ngModel)]="model.Truck.Name">
+            <h5><b>Caminhões</b></h5>
         </div>
-    </div>
-    <div class="row">
-        <div class="col-sm-4">
-            <input type="text" 
-                    class="form-control formImput" 
-                    placeholder="Altura" 
-                    aria-label="Altura" 
-                    aria-describedby="basic-addon1"
-                    [(ngModel)]="model.Truck.TruckParam.Height">
         </div>
-        <div class="col-sm-4">
-            <input type="text" 
-                    class="form-control formImput" 
-                    placeholder="Largura" 
-                    aria-label="Largura" 
-                    aria-describedby="basic-addon1"
-                    [(ngModel)]="model.Truck.TruckParam.Length">
-        </div>
-        <div class="col-sm-4">
-            <input type="text" 
-                    class="form-control formImput" 
-                    placeholder="Comp"
-                    aria-label="Comprimento" 
-                    aria-describedby="basic-addon1"
-                    [(ngModel)]="model.Truck.TruckParam.Width">
-        </div>
-    </div>
-    </div>
-    <ng-template #comboInfo>
-    <div class="ComboInfoTruck" >
+        <div class="ManualInfoTruck" *ngIf="model.ManualDataInsert else comboInfo">
         <div class="row">
             <div class="col-sm-12">
-                
-                <select class="form-select form-select-lg mb-3" 
-                        aria-label=".form-select-lg example"
-                        [(ngModel)]="model.TruckId"
-                        (change)="onSelectTruckModel()">
-                    <option value="0">Selecione o modelo</option>
-
-                    <option *ngFor="let item of listTruckTypes" value="{{item.Id}}">{{item.Name}}</option>
-                  </select>
-                  
+                <input type="text" 
+                        class="form-control formImput" 
+                        placeholder="Nome Modelo" 
+                        aria-label="Nome Modelo" 
+                        aria-describedby="basic-addon1"
+                        [(ngModel)]="model.Truck.Name">
             </div>
         </div>
     </div>
-    </ng-template>
-
-    <div class="row">
-    <div class="col-sm-12">
-        <h5><b>Configuração camera</b></h5>
-    </div>
-    </div>
-    <div class="row">
-    <div class="col-sm-6">
-        <input type="text" 
-                class="form-control formImput" 
-                placeholder="Distância lateral" 
-                aria-label="Distância" 
-                aria-describedby="basic-addon1"
-                [(ngModel)]="model.BalanceInfo.DistanceScaleCam1">
-    </div>
-    <div class="col-sm-6">
-        <input type="text" 
-                class="form-control formImput" 
-                placeholder="Distância traseira" 
-                aria-label="Distância" 
-                aria-describedby="basic-addon1"
-                [(ngModel)]="model.BalanceInfo.DistanceScaleCam2">
-    </div>
-    </div>
+        <ng-template #comboInfo>
+        <div class="ComboInfoTruck" >
+            <div class="row" [style.margin-bottom]="enableRegister ? '18px' : '0px'">
+                <div class="col-sm-12">
+                    
+                    <select class="form-select form-select-lg mb-3" 
+                            aria-label=".form-select-lg example"
+                            [(ngModel)]="model.TruckId"
+                            (change)="onSelectTruckModel()">
+                        <option value="0">Selecione o modelo</option>
     
-    <div class="col-sm-12">
-        <div class="d-grid">
-            <button type="button" 
-                    class="btn btn-primary"
-                    (click)="saveInfos()">Salvar informações</button>
+                        <option *ngFor="let item of listTruckTypes" value="{{item.Id}}">{{item.Name}}</option>
+                      </select>
+                      
+                </div>
+            </div>
         </div>
+        </ng-template>
+        
+        <div *ngIf="enableRegister">
+        
+        <div class="row">
+            <div class="col-sm-4">
+                <input type="text" 
+                        class="form-control formImput" 
+                        placeholder="Altura" 
+                        aria-label="Altura" 
+                        aria-describedby="basic-addon1"
+                        [(ngModel)]="model.Truck.TruckParam.Height">
+            </div>
+            <div class="col-sm-4">
+                <input type="text" 
+                        class="form-control formImput" 
+                        placeholder="Largura" 
+                        aria-label="Largura" 
+                        aria-describedby="basic-addon1"
+                        [(ngModel)]="model.Truck.TruckParam.Length">
+            </div>
+            <div class="col-sm-4">
+                <input type="text" 
+                        class="form-control formImput" 
+                        placeholder="Comp"
+                        aria-label="Comprimento" 
+                        aria-describedby="basic-addon1"
+                        [(ngModel)]="model.Truck.TruckParam.Width">
+            </div>
+        </div>
+    
+        <div class="row">
+        <div class="col-sm-12">
+            <h5><b>Configuração camera</b></h5>
+        </div>
+        </div>
+        <div class="row">
+        <div class="col-sm-6">
+            <input type="text" 
+                    class="form-control formImput" 
+                    placeholder="Distância lateral" 
+                    aria-label="Distância" 
+                    aria-describedby="basic-addon1"
+                    [(ngModel)]="model.BalanceInfo.DistanceScaleCam1">
+        </div>
+        <div class="col-sm-6">
+            <input type="text" 
+                    class="form-control formImput" 
+                    placeholder="Distância traseira" 
+                    aria-label="Distância" 
+                    aria-describedby="basic-addon1"
+                    [(ngModel)]="model.BalanceInfo.DistanceScaleCam2">
+        </div>
+        </div>
+        
+        <div class="col-sm-12">
+            <div class="d-grid">
+                <button type="button" 
+                        class="btn btn-primary"
+                        (click)="saveInfos()">Salvar informações</button>
+            </div>
+        </div>
+    </div>
     </div>
     
 </div>

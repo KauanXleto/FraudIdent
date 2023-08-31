@@ -1,5 +1,6 @@
 ﻿using MQTTnet;
 using MQTTnet.Client;
+using MQTTnet.Protocol;
 using MQTTnet.Server;
 using System;
 using System.Collections.Generic;
@@ -21,6 +22,7 @@ namespace FraudIdent.Backbone.BusinessRules
             MqttClientOptions _options = new MqttClientOptionsBuilder()
             .WithClientId(clientId)
             .WithTcpServer(brokerUrl, brokerPort)
+            .WithKeepAlivePeriod(TimeSpan.FromMinutes(60))
             .WithCredentials("", "")
             .Build();
 
@@ -42,7 +44,7 @@ namespace FraudIdent.Backbone.BusinessRules
 
                     _isAwait = false;
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     Console.WriteLine("Erro Connect");
                 }
@@ -50,7 +52,7 @@ namespace FraudIdent.Backbone.BusinessRules
                 if (_keepAlive == true)
                     keepAlive();
             }
-            else if(!_client.IsConnected && _isAwait)
+            else if (!_client.IsConnected && _isAwait)
             {
                 //Connect(_keepAlive);
             }
@@ -70,7 +72,7 @@ namespace FraudIdent.Backbone.BusinessRules
 
         public void Subscribe(string topic)
         {
-            _client.SubscribeAsync(topic);
+            _client.SubscribeAsync(topic, MqttQualityOfServiceLevel.ExactlyOnce);
         }
 
         public void Publish(string topic, string message)
@@ -88,7 +90,7 @@ namespace FraudIdent.Backbone.BusinessRules
             else
             {
                 Connect();
-                Task.Delay(new TimeSpan(0, 0, 10)).ContinueWith(o => { Publish(topic, message); });                
+                Task.Delay(new TimeSpan(0, 0, 10)).ContinueWith(o => { Publish(topic, message); });
             }
 
         }

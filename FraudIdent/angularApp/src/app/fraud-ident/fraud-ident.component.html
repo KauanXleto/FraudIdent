@@ -1,0 +1,10 @@
+<div class="row">      
+    <div class="col-sm-12 controlPanel">
+      <app-control-panel [validateFraud]="true" (truckId)="updateTruckId($event)"></app-control-panel>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-12 videoScreen">
+      <app-video-screen [truckId]="truckSelect"></app-video-screen>
+    </div>
+  </div>

@@ -47,6 +47,7 @@ namespace FraudIdent.Backbone.Providers
                                 set
                                     Length = {entity.Length.ToString().Replace(",", ".")},
                                     Width = {entity.Width.ToString().Replace(",", ".")},
+                                    Height = {entity.Height.ToString().Replace(",", ".")},
                                     DistanceScaleCam1 = {entity.DistanceScaleCam1.ToString().Replace(",", ".")},
                                     DistanceScaleCam2 = {entity.DistanceScaleCam2.ToString().Replace(",", ".")}
 
@@ -59,9 +60,10 @@ namespace FraudIdent.Backbone.Providers
 
             using (var connection = new SqlConnection(connString))
             {
-                entity.Id = connection.QuerySingle<int>($@"Insert into BalanceInfo (Length, Width, DistanceScaleCam1, DistanceScaleCam2)  OUTPUT INSERTED.Id
+                entity.Id = connection.QuerySingle<int>($@"Insert into BalanceInfo (Length, Width, Height, DistanceScaleCam1, DistanceScaleCam2)  OUTPUT INSERTED.Id
                                     values({entity.Length.ToString().Replace(",", ".")},
                                            {entity.Width.ToString().Replace(",", ".")},
+                                           {entity.Height.ToString().Replace(",", ".")},
                                            {entity.DistanceScaleCam1.ToString().Replace(",", ".")},
                                            {entity.DistanceScaleCam2.ToString().Replace(",", ".")})");
             }
@@ -199,7 +201,7 @@ namespace FraudIdent.Backbone.Providers
         {
 
             var sql = $@"
-                Select top 10 * from LobInfo order by CreateDate Desc";
+                Select top 10 * from LobInfo WITH (NOLOCK) order by CreateDate Desc";
 
             var result = new List<LobInfo>();
             using (var connection = new SqlConnection(connString))
@@ -209,17 +211,42 @@ namespace FraudIdent.Backbone.Providers
 
             return result;
         }
+        public LobInfo GetLobInfo1()
+        {
+
+            var sql = $@"
+                Select top 1 * from LobInfo WITH (NOLOCK) WHERE BackImageTruck NOT LIKE '' order by CreateDate Desc";
+
+            using (var connection = new SqlConnection(connString))
+            {
+                return connection.QueryFirstOrDefault<LobInfo>(sql);
+            }
+        }
+        public LobInfo GetLobInfo2()
+        {
+
+            var sql = $@"
+                Select top 1 * from LobInfo WITH (NOLOCK) WHERE SideImageTruck NOT LIKE '' order by CreateDate Desc";
+
+            using (var connection = new SqlConnection(connString))
+            {
+                return connection.QueryFirstOrDefault<LobInfo>(sql);
+            }
+        }
 
         public List<LobInfo> GetLobInfo(LobInfo entity)
         {
 
             var sql = $@"
-                Select * from LobInfo
+                Select top 10 * from LobInfo
                 where 1 = 1
                 {(entity.Id > 0 ? " and Id = " + entity.Id.ToString() : "")}
                 {(entity.TruckId > 0 ? " and TruckId = " + entity.TruckId.ToString() : "")}
                 {(entity.HasError != null ? " and HasError = " + (entity.HasError == true ? "1" : "0") : "")}
                 {(entity.HasSuccess != null ? " and HasSuccess = " + (entity.HasSuccess == true ? "1" : "0") : "")}
+                {(entity.IsDistanceImage != null ? " and IsNull(IsDistanceImage, 0) = " + (entity.IsDistanceImage == true ? "1" : "0") : "")}
+
+                order by CreateDate Desc
             ";
 
             var result = new List<LobInfo>();
@@ -240,6 +267,7 @@ namespace FraudIdent.Backbone.Providers
                                     TruckId = {entity.TruckId.ToString()},
                                     HasError = {(entity.HasError != null ? (entity.HasError == true ? "1" : "0") : "")},
                                     HasSuccess = {(entity.HasSuccess != null ? (entity.HasSuccess == true ? "1" : "0") : "")},
+                                    IsDistanceImage = {(entity.IsDistanceImage != null ? (entity.IsDistanceImage == true ? "1" : "0") : "")},
                                     MessageError = '{entity.MessageError}',
                                     BackImageTruck = '{entity.BackImageTruck}',
                                     SideImageTruck = '{entity.SideImageTruck}'
@@ -256,19 +284,20 @@ namespace FraudIdent.Backbone.Providers
         public int InsertLobInfo(LobInfo entity)
         {
 
-            var sql = $@"insert into LobInfo(TruckId, CreateDate, HasError, HasSuccess, MessageError, BackImageTruck, SideImageTruck)  OUTPUT INSERTED.Id
+            var sql = $@"insert into LobInfo(TruckId, CreateDate, HasError, HasSuccess, IsDistanceImage, MessageError, BackImageTruck, SideImageTruck)  OUTPUT INSERTED.Id
                                 values({entity.TruckId.ToString()},
-                                       '{DateTime.Now.ToString()}',
-                                       {(entity.HasError != null ? (entity.HasError == true ? "1" : "0") : "")},
-                                       {(entity.HasSuccess != null ? (entity.HasSuccess == true ? "1" : "0") : "")},
-                                       '{entity.MessageError}',
-                                       '{entity.BackImageTruck}',
-                                       '{entity.SideImageTruck}')";
+                                       getdate(),
+                                       {(entity.HasError != null ? (entity.HasError == true ? "1" : "0") : "0")},
+                                       {(entity.HasSuccess != null ? (entity.HasSuccess == true ? "1" : "0") : "0")},
+                                       {(entity.IsDistanceImage != null ? (entity.IsDistanceImage == true ? "1" : "0") : "0")},
+                                       '{(entity.MessageError != null ? entity.MessageError : "")}',
+                                       '{(entity.BackImageTruck != null ? entity.BackImageTruck : "")}',
+                                       '{(entity.SideImageTruck != null ? entity.SideImageTruck : "")}')";
 
 
             using (var connection = new SqlConnection(connString))
             {
-                entity.Id = conn.QuerySingle(sql);
+                entity.Id = connection.QuerySingle(sql).Id;
             }
 
             return entity.Id;

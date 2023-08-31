@@ -7,7 +7,7 @@ namespace FraudIdent.Models
     {
         public bool ManualDataInsert { get; set; }
         public int? TruckId { get; set; }
-        public Truck Truck { get; set; }
-        public BalanceInfo BalanceInfo { get; set; }
+        public Truck? Truck { get; set; }
+        public BalanceInfo? BalanceInfo { get; set; }
     }
 }

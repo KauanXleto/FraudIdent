@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-home',
@@ -6,4 +6,10 @@ import { Component } from '@angular/core';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent {
+
+  truckSelect: number = 0;
+
+  updateTruckId (event: number){
+    this.truckSelect = event;
+  }
 }

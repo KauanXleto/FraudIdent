@@ -1,1 +1,21 @@
-<app-home></app-home>
+
+<div class="main-container">
+    <div class="nav-container">
+      <ul>
+        <li [routerLinkActive]="'active'" [routerLinkActiveOptions]="{exact: true}"><a routerLink="">Início</a></li>
+        <li [routerLinkActive]="'active'"><a [routerLink]="'FraudIdent'">Fluxo de pesagem</a></li>
+        <li [routerLinkActive]="'active'"><a [routerLink]="'PastFraudIdent'">Pesagens anteriores</a></li>
+        <li [routerLinkActive]="'active'"><a [routerLink]="'EditRegisterTruck'">Cadastro/Edição Caminhões</a></li>
+
+      </ul>
+    </div>
+    <div class="component-container">
+        <div class="center-screen">
+            <div class="boxView">
+                <router-outlet id="Course"></router-outlet>
+            </div>
+        </div>
+    </div>
+    
+  </div>
+  

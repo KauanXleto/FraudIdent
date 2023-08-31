@@ -39,6 +39,7 @@ BEGIN
 		[CreateDate] [datetime] NULL,
 		[HasError] [bit] NULL,
 		[HasSuccess] [bit] NULL,
+		[IsDistanceImage] [bit] NULL,		
 		[MessageError] [varchar](max) NULL,
 		[BackImageTruck] [varchar](max) NULL,
 		[SideImageTruck] [varchar](max) NULL,
@@ -54,6 +55,7 @@ BEGIN
 		[Id] [int] IDENTITY(1,1) primary key NOT NULL,
 		[Length] [decimal](18, 9) NULL,
 		[Width] [decimal](18, 9) NULL,
+		[Height] [decimal](18, 9) NULL,
 		[DistanceScaleCam1] [decimal](18, 9) NULL,
 		[DistanceScaleCam2] [decimal](18, 9) NULL
 	)

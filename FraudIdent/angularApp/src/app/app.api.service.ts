@@ -13,7 +13,7 @@ export class AppApiService {
   controllerUrl: string = "";
 
   constructor(private http: HttpClient) {
-    this.controllerUrl = "http://localhost:8004/FraudIdent";
+    this.controllerUrl = "https://localhost:5001/FraudIdent";
   }
   
   public getTruckModels(){
@@ -24,8 +24,17 @@ export class AppApiService {
     return this.http.get<AppBanceInfoModel>(this.controllerUrl + "/getBalanceInfos");
   }
 
-  public getLobInfo(){
-    return this.http.get<AppLobInfoModel[]>(this.controllerUrl + "/getLastLobInfo");
+  public getLobInfo(truckId: number, viewDistance: Boolean){
+    var params: String = "";
+
+    params += `IsDistanceImage=${viewDistance.toString()}`;
+
+    if(truckId > 0){
+      params += `&truckId=${truckId.toString()}`;
+    }
+    
+
+    return this.http.get<AppLobInfoModel[]>(this.controllerUrl + "/getLastLobInfo" + (params != "" ? "?" + params : ""));
   }
 
   public saveInfos(data: string){   
@@ -34,6 +43,16 @@ export class AppApiService {
       headers: new HttpHeaders({'Content-Type': 'application/json'})
     }
 
-    return this.http.post(this.controllerUrl + "/saveConfigurations", JSON.stringify(data), httpOptions);
+    return this.http.post(this.controllerUrl + "/saveConfigurations", data, httpOptions);
+  }
+
+  public changeTruckSelected(truckId: number){   
+    var data: String = `${truckId.toString()}`;
+
+    const httpOptions = {
+      headers: new HttpHeaders({'Content-Type': 'application/json'})
+    }
+
+    return this.http.post(this.controllerUrl + "/changeTruckSelected", JSON.stringify(data), httpOptions);
   }
 }

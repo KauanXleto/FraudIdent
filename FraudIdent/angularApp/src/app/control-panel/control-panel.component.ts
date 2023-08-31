@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { AppApiService } from '../app.api.service';
 import { HttpClient } from '@angular/common/http';
@@ -18,7 +18,16 @@ export class ControlPanelComponent implements OnInit{
 
   model: AppCoreModule = new AppCoreModule();
 
-  ngOnInit() {
+  @Output()
+  truckId = new EventEmitter<number>();
+
+  @Input()
+  validateFraud: boolean = false;
+
+  @Input()
+  enableRegister: boolean = false;
+
+  ngOnInit(): void {
     this.initComponent();
   }
 
@@ -40,6 +49,12 @@ export class ControlPanelComponent implements OnInit{
           Length: 0,
           Width: 0
         };
+
+        if(this.model.TruckId > 0 && this.validateFraud){  
+          this.appApiService.changeTruckSelected(this.model.TruckId).subscribe(() => {});
+        }
+
+        this.truckId.emit(this.model.TruckId);
     }
   }
 

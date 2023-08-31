@@ -7,18 +7,26 @@ import { VideoScreenComponent } from './video-screen/video-screen.component';
 import { ControlPanelComponent } from './control-panel/control-panel.component';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
+import { AppRoutingModule } from './app-routing.module';
+import { FraudIdentComponent } from './fraud-ident/fraud-ident.component';
+import { PastFraudIdentComponent } from './past-fraud-ident/past-fraud-ident.component';
+import { EditRegisterTruckComponent } from './edit-register-truck/edit-register-truck.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
     VideoScreenComponent,
-    ControlPanelComponent
+    ControlPanelComponent,
+    FraudIdentComponent,
+    PastFraudIdentComponent,
+    EditRegisterTruckComponent
   ],
   imports: [
-    BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
+    BrowserModule,
     HttpClientModule,
-    FormsModule
+    FormsModule,
+    AppRoutingModule
   ],
   providers: [],
   bootstrap: [AppComponent]

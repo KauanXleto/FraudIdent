@@ -13,8 +13,6 @@ namespace FraudIdent.Backbone.BusinessEntities
         public decimal? Height { get; set; }
         public decimal? Length { get; set; }
         public decimal? Width { get; set; }
-
-        public Truck Truck { get; set; }
         
     }
 }

@@ -37,19 +37,19 @@ namespace FraudIdent.Controllers
         }
 
         [HttpGet("getLastLobInfo")]
-        public List<LobInfo> GetLastLobInfo()
+        public List<LobInfo> GetLastLobInfo([FromQuery] bool? IsDistanceImage, [FromQuery] int? TruckId)
         {
-            return this.coreBusinessRules.GetLobInfo();
+            return this.coreBusinessRules.GetLobInfo(new LobInfo() { IsDistanceImage = IsDistanceImage, TruckId = TruckId });
         }
 
         [HttpPost("saveConfigurations")]
-        public void SaveConfigurations([FromBody]string obj)
+        public void SaveConfigurations([FromBody] ModelUserConfiguration entity)
         {
-            var entity = JsonConvert.DeserializeObject<ModelUserConfiguration>(obj);
+            //var entity = JsonConvert.DeserializeObject<ModelUserConfiguration>(obj);
 
             if (!entity.ManualDataInsert)
             {
-                if(entity.TruckId > 0)
+                if (entity.TruckId > 0)
                     entity.Truck.Id = entity.TruckId.Value;
             }
             else
@@ -59,6 +59,56 @@ namespace FraudIdent.Controllers
 
             this.coreBusinessRules.SaveTruck(entity.Truck);
             this.coreBusinessRules.SaveBalanceInfo(entity.BalanceInfo);
+        }
+
+
+        [HttpPost("saveLobInfo")]
+        public void SaveLobInfo([FromBody] SaveLobInfoRequest entity)
+        {
+            if (!string.IsNullOrWhiteSpace(entity.SideImageTruck) && !string.IsNullOrWhiteSpace(entity.BackImageTruck))
+            {
+                var lobInfo = new LobInfo();
+
+                lobInfo.TruckId = (entity.TruckId > 0 ? entity.TruckId : 1);
+                lobInfo.HasError = entity.HasError;
+                lobInfo.HasSuccess = entity.HasSuccess;
+                lobInfo.IsDistanceImage = entity.IsDistanceImage;
+
+                lobInfo.MessageError = entity.MessageError;
+
+                var sideMimetype = this.coreBusinessRules.GetMimeType(entity.SideImageTruck);
+                var backMimetype = this.coreBusinessRules.GetMimeType(entity.BackImageTruck);
+
+                lobInfo.SideImageTruck = $"data:{sideMimetype};base64," + entity.SideImageTruck;
+                lobInfo.BackImageTruck = $"data:{backMimetype};base64," + entity.BackImageTruck;
+
+                this.coreBusinessRules.SaveLobInfo(lobInfo);
+            }
+        }
+
+        [HttpGet("getAllConfig")]
+        public dynamic GetAllConfig([FromQuery] int? TruckId)
+        {
+
+            if (TruckId == null || (TruckId != null && TruckId == 0))
+            {
+                TruckId = 1;
+            }
+
+            var result = this.coreBusinessRules.GetAllConfig(TruckId.Value);
+
+            return result;
+        }
+
+        [HttpPost("changeTruckSelected")]
+        public void ChangeTruckSelected([FromBody] int? TruckId)
+        {
+            if (TruckId == null || (TruckId != null && TruckId == 0))
+            {
+                TruckId = 1;
+            }
+
+            this.coreBusinessRules.NotifyMqttChangeTruck(TruckId.Value);
         }
     }
 }
