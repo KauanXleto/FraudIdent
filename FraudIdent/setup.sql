@@ -13,9 +13,17 @@ BEGIN
 		[Name] [varchar](500) NULL
 
 	)
+	
+	insert into [Truck](Name)
+		   	values('Caminhão 1')
+	insert into [Truck](Name)
+		   	values('Caminhão 2')
+	insert into [Truck](Name)
+		   	values('Caminhão 3')
+	insert into [Truck](Name)
+		   	values('Caminhão 4')
 END
 go
-
 
 IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[TruckParam]') AND type in (N'U'))
 BEGIN
@@ -28,6 +36,15 @@ BEGIN
 
 		FOREIGN KEY([TruckId]) REFERENCES [dbo].[Truck] ([Id])
 	)
+	
+	insert into [TruckParam](TruckId, Height, Length, Width)
+		   	values(1, 10, 10, 10)
+	insert into [TruckParam](TruckId, Height, Length, Width)
+		   	values(2, 20, 20, 20)
+	insert into [TruckParam](TruckId, Height, Length, Width)
+		   	values(3, 30, 30, 30)
+	insert into [TruckParam](TruckId, Height, Length, Width)
+		   	values(4, 40, 40, 40)
 END
 go
 
@@ -39,7 +56,7 @@ BEGIN
 		[CreateDate] [datetime] NULL,
 		[HasError] [bit] NULL,
 		[HasSuccess] [bit] NULL,
-		[IsDistanceImage] [bit] NULL,		
+		[IsDistanceImage] [bit] NULL,
 		[MessageError] [varchar](max) NULL,
 		[BackImageTruck] [varchar](max) NULL,
 		[SideImageTruck] [varchar](max) NULL,
@@ -60,7 +77,6 @@ BEGIN
 		[DistanceScaleCam2] [decimal](18, 9) NULL
 	)
 
-	insert into [BalanceInfo](Length, Width, DistanceScaleCam1, DistanceScaleCam2)
-					   values(50, 40, 100, 200)
+	insert into [BalanceInfo](Length, Width, Height, DistanceScaleCam1, DistanceScaleCam2)
+			   values(50, 40, 10, 100, 200)
 END
-

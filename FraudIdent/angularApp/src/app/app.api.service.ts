@@ -13,7 +13,7 @@ export class AppApiService {
   controllerUrl: string = "";
 
   constructor(private http: HttpClient) {
-    this.controllerUrl = "https://localhost:5001/FraudIdent";
+    this.controllerUrl = "https://fraudidentapi.azurewebsites.net/FraudIdent";
   }
   
   public getTruckModels(){

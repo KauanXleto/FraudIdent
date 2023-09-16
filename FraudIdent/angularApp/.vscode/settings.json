@@ -1,0 +1,4 @@
+{
+    "appService.defaultWebAppToDeploy": "/subscriptions/a6efd4cf-6a66-49ae-8acc-22e989def57c/resourceGroups/WebFrontEnd/providers/Microsoft.Web/sites/fraudIdentAngular",
+    "appService.deploySubpath": "dist\\angular-app"
+}
